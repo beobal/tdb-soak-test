@@ -37,26 +37,28 @@ public class UpdateSoakTest{
 
 	private Dataset myDataset;
 	private Lock myLock;
+	private String myLocation;
 	
 	private static boolean KEEP_RUNNING = true;
 	
 	public UpdateSoakTest(String location){
-		myDataset = TDBFactory.createDataset(location);
+		myLocation = location;
 		myLock = new ReentrantLock(true);
 	}
     
     public void doUpdate(List<Statement> statements) throws Exception {
     	myLock.lock();
     	try{
-    		Model model = getDefaultModel();
+    		myDataset = TDBFactory.createDataset(myLocation);
+    		Model model = myDataset.getDefaultModel();
     		addStatements(statements, model);
-    		syncChangesToDisk();
+    		syncChangesToDisk(model);
     	}finally{
     		myLock.unlock();
     	}
     }
     
-    private void syncChangesToDisk() throws Exception {
+    private void syncChangesToDisk(Model model) throws Exception {
 		
 		Object fileMode = TDB.getContext().get(SystemTDB.symFileMode);
 		if ( null == fileMode || ! fileMode.toString().equals("mapped") ) {
@@ -65,10 +67,10 @@ public class UpdateSoakTest{
 				LOG.debug("About to sync TDB dataset...");
 			}
 			
-			TDB.sync( getDefaultModel() );
+			TDB.sync(model);
 
-			if (LOG.isDebugEnabled()){
-				LOG.debug("Synched TDB dataset");
+			if (LOG.isInfoEnabled()){
+				LOG.info("Synched TDB dataset");
 			}
 		} else {
 			if (LOG.isDebugEnabled()){
@@ -77,20 +79,10 @@ public class UpdateSoakTest{
 		}
 	}
     
-    public Model getDefaultModel(){
-    	return myDataset.getDefaultModel();
-    }
-    
     private void addStatements(List<Statement> statements, Model model) 
     throws Exception {
 		
-		if (LOG.isDebugEnabled()){
-		
-		}
 		model.add(statements);
-		if (LOG.isDebugEnabled()){
-
-		}
 	}
     
     public void runTest(int numWorkers){
