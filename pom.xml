@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.talis</groupId>
+  <artifactId>TdbTest</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>TdbTest</name>
+  <url>http://maven.apache.org</url>
+  <repositories>
+    <repository>
+        <id>jena-snapshots</id>
+        <url>http://openjena.org/repo-dev</url>
+    </repository>
+  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>com.hp.hpl.jena</groupId>
+      <artifactId>tdb</artifactId>
+      <version>0.8.5-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.7</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+	  <plugins>
+	      <plugin>
+	        <!-- NOTE: We don't need a groupId specification because the group is
+	             org.apache.maven.plugins ...which is assumed by default.
+	         -->
+	        <artifactId>maven-assembly-plugin</artifactId>
+	        <!-- version>2.2-beta-5</version-->
+	        <configuration>
+	          <descriptorRefs>
+	            <descriptorRef>jar-with-dependencies</descriptorRef>
+	          </descriptorRefs>
+	          <archive>
+                <manifest>
+                <mainClass>com.talis.UpdateSoakTest</mainClass>
+               </manifest>
+          </archive>
+	        </configuration>
+	     </plugin>
+	   </plugins>
+	</build>
+</project>
